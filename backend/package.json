@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@huggingface/inference": "^4.13.15",
+    "@reduxjs/toolkit": "^2.8.2",
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "datauri": "^4.1.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.4",
+    "multer": "^2.0.2",
+    "nodemailer": "^8.0.7",
+    "nodemon": "^3.1.10",
+    "react-redux": "^9.2.0",
+    "redis": "^5.12.1",
+    "socket.io": "^4.8.3",
+    "unpdf": "^1.6.2"
+  }
+}
