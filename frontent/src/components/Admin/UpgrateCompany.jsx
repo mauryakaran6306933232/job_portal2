@@ -1,132 +1,4 @@
-// import React from 'react'
-// import Navebar from '../shared/Navebar'
-// import { ArrowLeftIcon } from 'lucide-react'
-// import { Button } from '../ui/button'
-// import { Label } from '../ui/label'
-// import { Input } from '../ui/input'
-// import { useState } from 'react'
-// import axios from 'axios';
-// import { toast } from 'react-hot-toast';
-// import { useSelector, useDispatch } from 'react-redux'
-// import Store from '../../redux/Store';
-// import { useNavigate } from 'react-router-dom'
-// import { setEditCompany } from '../../redux/CompanySlice'
-// export default function UpgrateCompany({
-//   boolean1, setBoolean1, singleCompanyId, singleCompanyName ,item }) {
-//   const [companyName, setCompanyName] = useState(item.name)
-//   const [description, setDescription] = useState(item.description);
-//   const [website, setWebsite] = useState('')
-//   const [location, setLocation] = useState(item.location);
-//   const [logo, setLogo] = useState(item.logo);
-//   const editCompany = useSelector(Store=>Store?.company?.editCompany);
-//   const navigate = useNavigate();
-//   const dispatch = useDispatch();
-//   const formHandler = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const formData = new FormData();
-//       formData.append('name', companyName);
-//       formData.append('description', description);
-//       formData.append('website', website);
-//       formData.append('location', location);
-//       formData.append('logo', logo);
-//       const res = await axios.post(`http://localhost:8000/company/update/${singleCompanyId}`, formData, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data'
-//         },
-//         withCredentials: true
-//       });
-//       if (res?.data?.success) {
-//         toast.success(res?.data?.message);
-//         dispatch(setEditCompany(!editCompany));
-//       }
-//     }
-//     catch (error) {
-//       const err_mess = error?.response?.data?.message || error?.message;
-//       toast.error(err_mess);
-//     }
-//   }
-
-// return (
-//   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-    
-//     <div className="bg-white w-full max-w-xl mx-auto my-10 p-6 rounded-2xl shadow-xl">
-//       <form onSubmit={formHandler}>
-        
-//         <div className='flex items-center pt-4 pb-2'>
-//           <Button
-//             onClick={() => setBoolean1(null)}
-//             variant='outline'
-//             className='flex items-center gap-2 text-gray-500 font-semibold'
-//           >
-//             <span><ArrowLeftIcon /></span>
-//             Back
-//           </Button>
-
-//           <h1 className='font-bold text-xl ml-4'>
-//             {singleCompanyName} setUp
-//           </h1>
-//         </div>
-
-//         <Label className='mt-5 font-bold'>Company Name</Label>
-//         <Input
-//           className='mt-2'
-//           type="text"
-//           placeholder='Company Name'
-//           value={companyName}
-//           onChange={(e) => setCompanyName(e.target.value)}
-//           name='name'
-//         />
-
-//         <Label className='mt-5 font-bold'>Description</Label>
-//         <Input
-//           className='mt-2'
-//           type="text"
-//           placeholder='Description'
-//           value={description}
-//           onChange={(e) => setDescription(e.target.value)}
-//           name='description'
-//         />
-
-//         <Label className='mt-5 font-bold'>Company Website</Label>
-//         <Input
-//           className='mt-2'
-//           type="text"
-//           placeholder='website'
-//           value={website}
-//           onChange={(e) => setWebsite(e.target.value)}
-//           name='website'
-//         />
-
-//         <Label className='mt-5 font-bold'>Location</Label>
-//         <Input
-//           className='mt-2'
-//           type="text"
-//           placeholder='Location'
-//           value={location}
-//           onChange={(e) => setLocation(e.target.value)}
-//           name='location'
-//         />
-
-//         <div className='flex items-center justify-between'>
-//           <Label className='mt-5 font-bold'>Logo</Label>
-//           <Input
-//             className='mt-5 w-[200px]'
-//             type='file'
-//             onChange={(e) => setLogo(e.target.files[0])}
-//             name='logo'
-//           />
-//         </div>
-
-//         <Button className='w-full mt-5' type='submit'>
-//           Edit Company
-//         </Button>
-//       </form>
-//     </div>
-
-//   </div>
-// )
-// }
+import { COMPANY_API_END_POINT } from '../../utils/constant'; 
 import React from 'react'
 import { Button } from '../ui/button'
 import { Label } from '../ui/label'
@@ -159,10 +31,9 @@ export default function UpgrateCompany({ boolean1, setBoolean1, singleCompanyId,
       if (location) formData.append('location', location);
       if (logo) formData.append('logo', logo);
 
-      const res = await axios.post(`http://localhost:8000/company/update/${singleCompanyId}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true
-      });
+      const res = await axios.post(`${COMPANY_API_END_POINT}/update/${singleCompanyId}`, formData, { // ✅ CHANGE
+  headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true
+});
 
       if (res?.data?.success) {
         toast.success(res?.data?.message);

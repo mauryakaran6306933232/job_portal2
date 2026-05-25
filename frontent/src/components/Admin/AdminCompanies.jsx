@@ -1,83 +1,4 @@
-// import React from 'react'
-// import Navebar from '../shared/Navebar'
-// import { Button } from '../ui/button'
-// import { Input } from '../ui/input';
-// import { useNavigate } from 'react-router-dom';
-// import CompaniesTable from '../CompaniesTable';
-// import { setAllCompanies, setSearchCompanyByText } from '../../redux/CompanySlice';
-// import { useSelector, useDispatch } from 'react-redux';
-// import axios from 'axios';
-// import { toast } from 'react-hot-toast';
-// import Store from '../../redux/Store'
-// import { useEffect, useState } from 'react';
-// export default function AdminCompanies() {
-//   const dispatch = useDispatch();
-//   const allCompanies = useSelector(Store => Store?.company?.allCompanies);
-//   const singleCompany = useSelector(Store => Store?.company?.singleCompany);
-//   const editCompany = useSelector(Store => Store?.company?.editCompany)
-//   console.log('value of the all companies is', allCompanies);
-//   var filterCompeny = '';
-//   var [value, setValue] = useState("");
-//   const companyHandler = async () => {
-//     try {
-//       const res = await axios.get('http://localhost:8000/company/get', {
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//         withCredentials: true
-//       });
-//       if (res?.data?.success) {
-//         toast.success(res?.data?.message);
-//         dispatch(setAllCompanies(res?.data?.companies));
-//       }
-//     }
-//     catch (error) {
-//       const err_mess = error?.response?.data?.message || error?.message;
-//       toast.error(err_mess);
-//     }
-
-//   }
-
-//   useEffect(() => {
-//     companyHandler();
-//     // filterHandler(value)
-//   }, [singleCompany, editCompany]);
-//   useEffect(()=>{
-//       dispatch(setSearchCompanyByText(value));
-//   },[value])
-//   // const filterHandler =( value ) =>{
-
-//   //    filterCompeny = allCompanies.filter(job =>
-//   //   job.name.toLowerCase().includes(value.toLowerCase()))
-
-//   // }
-//   const navigate = useNavigate();
-//   return (
-//     <div>
-//       <Navebar />
-//       <div className=' max-w-6xl mx-auto my-10'>
-//         <div className='flex justify-between my-5  items-center'>
-//           {/* <Input value={value} onChange={(e)=>{setValue(e?.target?.env)}} className="w-fit"
-//            placeholder="filter By Name"></Input> */}
-//           <Input
-//             value={value}
-//             onChange={(e) => setValue(e.target.value)}
-//             className="w-fit"
-//             placeholder="filter By Name"
-//           />
-
-//           <Button onClick={() => { navigate('/admin/companies/create') }}>New Company</Button>
-//         </div>
-//         {
-//           allCompanies != null && allCompanies?.length != 0 ?
-//             <CompaniesTable allCompanies={allCompanies} />
-//             : (<div>  You are not add any company
-//             </div>)
-//         }
-//       </div>
-//     </div>
-//   )
-// }
+import { COMPANY_API_END_POINT } from '../../utils/constant';
 import React from 'react'
 import Navebar from '../shared/Navebar'
 import { Button } from '../ui/button'
@@ -100,10 +21,9 @@ export default function AdminCompanies() {
 
   const companyHandler = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/company/get', {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      });
+      const res = await axios.get(`${COMPANY_API_END_POINT}/get`, { // ✅ CHANGE
+  headers: { 'Content-Type': 'application/json' }, withCredentials: true
+});
       if (res?.data?.success) {
         dispatch(setAllCompanies(res?.data?.companies));
       }

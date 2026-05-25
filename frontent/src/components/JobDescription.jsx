@@ -1,164 +1,4 @@
-// import React, { useEffect, useState } from 'react';
-// import { Badge } from './ui/badge';
-// import { Button } from './ui/button';
-// import { useParams } from 'react-router-dom';
-// import axios from 'axios';
-// import { toast } from 'react-hot-toast';
-// import { setAppliedJob, setSingleJob } from '../redux/JobSlice';
-// import { useDispatch, useSelector } from 'react-redux';
-// import MatchScore from './MatchScore'; 
-// import ChatDialog from './shared/ChatDialog';
-// import ApplyJobDialog from './ApplyJobDialog'; // ■ NEW IMPORT
-// import { MessageCircle } from 'lucide-react'; 
-
-// export default function JobDescription() {
-//   const { id } = useParams();
-//   const [job, setJob] = useState(null);
-//   const [openChat, setOpenChat] = useState(false);
-//   const [openApply, setOpenApply] = useState(false); // ■ NEW APPLY STATE
-//   const dispatch = useDispatch();
-//   const singleJob = useSelector(Store => Store?.jobs?.singleJob?.application);
-//   const singleJobId = useSelector(Store => Store?.jobs?.singleJob?._id);
-//   const singleJob1 = useSelector(Store => Store?.jobs?.singleJob);
-//   const user_id = useSelector(Store => Store?.user?.user?._id);
-//   const applicant = useSelector(Store => Store?.jobs?.singleJob?.applicant);
-  
-//   const { user } = useSelector(Store => Store?.user) || {};
-
-//   const [isApplied, setIsApplied] = useState(applicant?.some(id => id === user_id) || false);
-
-//   useEffect(() => {
-//     const applied = applicant?.some(id => id === user_id) || false;
-//     setIsApplied(applied);
-//   }, [singleJob, user_id]);
-
-//   const appliedJobHandler = async () => {
-//     try {
-//       const res = await axios.get("http://localhost:8000/application/get", {
-//         headers: { 'Content-Type': 'application/json' },
-//         withCredentials: true
-//       });
-//       if (res?.data?.success) {
-//         dispatch(setAppliedJob(res?.data?.application));
-//       }
-//     } catch (error) {
-//       console.log("Fetch applied jobs error:", error?.response?.data?.message || error.message);
-//     }
-//   };
-
-//   useEffect(() => {
-//     appliedJobHandler();
-//   }, [singleJob]);
-
-//   const jobHandler = async () => {
-//     try {
-//       const res = await axios.get(`http://localhost:8000/job/getJobById/${id}`, {
-//         headers: { "Content-Type": 'application/json' },
-//         withCredentials: true
-//       });
-//       if (res?.data?.success) {
-//         setJob(res?.data?.job);
-//         dispatch(setSingleJob(res?.data?.job));
-//       }
-//     } catch (error) {
-//       toast.error(error?.response?.data?.message || error?.message);
-//     }
-//   };
-
-//   useEffect(() => {
-//     jobHandler();
-//   }, [id]);
-
-//   if (!job) {
-//     return <div className="max-w-7xl mx-auto my-10 text-gray-500">Loading job details...</div>;
-//   }
-
-//   return (
-//     <div className='max-w-7xl mx-auto my-10'>
-//       <div className='flex justify-between items-center'>
-//         <div>
-//           <h1 className='font-bold text-xl'>{job?.title}</h1>
-//           <div className='flex items-center gap-2 mt-4'>
-//             <Badge className="text-blue-700 font-bold" variant="ghost"> {job.position} Positions</Badge>
-//             <Badge className="text-[#F83002] font-bold" variant="ghost">{job.jobType}</Badge>
-//             <Badge className="text-[#7209b7] font-bold" variant="ghost">{job.salary} LPA</Badge>
-//           </div>
-//         </div>
-        
-//         <div className='flex items-center gap-3'>
-//           <Button 
-//             onClick={() => setOpenChat(true)}
-//             variant="outline" 
-//             className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
-//           >
-//             <MessageCircle size={16} className='mr-2'/> Message
-//           </Button>
-
-//           {/* ■ UPDATED: Opens Dialog instead of calling API directly */}
-//           <Button
-//             onClick={() => setOpenApply(true)}
-//             disabled={isApplied} 
-//             className={`rounded-lg ${isApplied
-//               ? 'bg-gray-600 cursor-not-allowed'
-//               : 'bg-[#7209b7] hover:bg-[#5f32ad] cursor-pointer'}`}
-//           >
-//             {!isApplied ? 'Apply Now' : 'Already Applied'}
-//           </Button>
-//         </div>
-//       </div>
-
-//       <h1 className='border-b-2 border-b-gray-300 font-medium py-4'>{job.description}</h1>
-
-//       <div className='my-4'>
-//         <h1 className='font-bold my-1'>Role: <span className='pl-4 font-normal text-gray-800'>{job.title}</span></h1>
-//         <h1 className='font-bold my-1'>Location: <span className='pl-4 font-normal text-gray-800'>{job.location}</span></h1>
-//         <h1 className='font-bold my-1'>Description: <span className='pl-4 font-normal text-gray-800'>{job.description}</span></h1>
-//         <h1 className='font-bold my-1'>Experience: <span className='pl-4 font-normal text-gray-800'>{job.experienceLevel} Yrs</span></h1>
-//         <h1 className='font-bold my-1'>Salary: <span className='pl-4 font-normal text-gray-800'>{job.salary} LPA</span></h1>
-//         <h1 className='font-bold my-1'>Total Applicants: <span className='pl-4 font-normal text-gray-800'>{job.application?.length || 0}</span></h1>
-//         <h1 className='font-bold my-1'>Posted Date: <span className='pl-4 font-normal text-gray-800'>{new Date(job.updatedAt).toLocaleDateString()}</span></h1>
-        
-//         {job?.requirements?.length > 0 && (
-//           <div className='my-4'>
-//             <h1 className='font-bold my-1'>Requirements:</h1>
-//             <div className='flex flex-wrap gap-2 mt-2'>
-//               {job.requirements.map((req, index) => (
-//                 <Badge key={index} variant="outline" className="text-gray-700 border-gray-300">{req}</Badge>
-//               ))}
-//             </div>
-//           </div>
-//         )}
-//       </div>
-
-//       {user?.role === 'student' && job?.requirements && (
-//         <div className="mt-8">
-//           <MatchScore jobRequirements={job.requirements} />
-//         </div>
-//       )}
-
-//       {openChat && (
-//         <ChatDialog 
-//           open={openChat} 
-//           setOpen={setOpenChat}
-//           receiverId={job?.created_by}
-//           receiverName="Recruiter"
-//           jobId={job?._id}
-//         />
-//       )}
-
-//       {/* ■■■ NEW: APPLY JOB DIALOG ■■■ */}
-//       {openApply && (
-//         <ApplyJobDialog 
-//           open={openApply} 
-//           setOpen={setOpenApply}
-//           jobId={job?._id}
-//           onApplied={() => { setIsApplied(true); jobHandler(); }} // Refresh job data on success
-//         />
-//       )}
-
-//     </div>
-//   );
-// }
+import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from '../utils/constant'; // ✅ AD
 import React, { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -194,10 +34,9 @@ export default function JobDescription() {
 
   const appliedJobHandler = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/application/get", {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      });
+      const res = await axios.get(`${APPLICATION_API_END_POINT}/get`, { // ✅ CHANGE
+  headers: { 'Content-Type': 'application/json' }, withCredentials: true
+});
       if (res?.data?.success) {
         dispatch(setAppliedJob(res?.data?.application));
       }
@@ -212,10 +51,9 @@ export default function JobDescription() {
 
   const jobHandler = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/job/getJobById/${id}`, {
-        headers: { "Content-Type": 'application/json' },
-        withCredentials: true
-      });
+      const res = await axios.get(`${JOB_API_END_POINT}/getJobById/${id}`, { // ✅ CHANGE
+  headers: { "Content-Type": 'application/json' }, withCredentials: true
+});
       if (res?.data?.success) {
         setJob(res?.data?.job);
         dispatch(setSingleJob(res?.data?.job));

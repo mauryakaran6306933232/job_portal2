@@ -1,66 +1,4 @@
-// import React from 'react'
-// import Navebar from '../shared/Navebar'
-// import { Button } from '../ui/button'
-// import { Label } from '../ui/label'
-// import { Input } from '../ui/input'
-// import { toast } from 'react-hot-toast';
-// import axios from 'axios';
-// import { useState } from 'react'
-// import { setSingleCompany } from '../../redux/CompanySlice'
-// import { useDispatch } from 'react-redux'
-// import { useNavigate } from 'react-router-dom'
-// export default function AdminCompanyCreate() {
-//   const navigate = useNavigate();
-//   const [companyName , setCompanyName] = useState('');
-//   const dispatch = useDispatch();
-//   const registerNewCompany =async()=>{     
-//     console.log('register company name is' ,companyName );
-//        try{
-//            const res = await axios.post('http://localhost:8000/company/register',{
-//             companyName : `${companyName}`
-//            },{
-//             headers :
-//               {
-//                 "Content-Type" : 'application/json'
-//               },
-//               withCredentials : true
-//            });
-//            if(res?.data?.success){
-//               toast.success(res?.data?.message);
-//               dispatch(setSingleCompany(res?.data?.company));
-//               navigate(`/admin/companies/${res?.data?.company?._id}`)
-//            }  
-//        }
-//       catch(error){
-//          const err_mess = error?.response?.data?.message || error?.message ;
-//          toast.error(err_mess);
-//       } 
-//   }
-//     return (
-//     <div>
-//      <Navebar/>
-//      <div className='max-w-4xl mx-auto'>
-//         <div className='my-10'>
-//             <h1 className='font-bold text-2xl '>Your Company Name</h1>  
-//       <p className='text-gray-500'>what would you like to give your company name</p>
-//         </div>
-      
-//      <Label>Company Name</Label>
-//      <Input
-//      type='text'
-//      className='my-2 '
-//      placeholder='Microsoft , google .etc'
-//      value={companyName}
-//      onChange={(e)=>{setCompanyName(e.target.value)}}
-//      ></Input>
-//      <div className='flex items-center gap-2 my-10'>
-// <Button className='cursor-pointer' onClick={()=>{navigate('/admin/companies')}} varient='outline'>Cancel</Button>
-// <Button className='cursor-pointer' onClick={()=>{registerNewCompany();}} >Continue</Button>
-//      </div>
-//      </div>
-//     </div>
-//   )
-// }
+import { COMPANY_API_END_POINT } from '../../utils/constant';
 import React from 'react'
 import Navebar from '../shared/Navebar'
 import { Button } from '../ui/button'
@@ -85,12 +23,9 @@ export default function AdminCompanyCreate() {
       return toast.error("Company name cannot be empty");
     }
     try {
-      const res = await axios.post('http://localhost:8000/company/register', {
-        companyName: companyName
-      }, {
-        headers: { "Content-Type": 'application/json' },
-        withCredentials: true
-      });
+      const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { // ✅ CHANGE
+  companyName: companyName
+}, { headers: { "Content-Type": 'application/json' }, withCredentials: true });
       if (res?.data?.success) {
         toast.success(res?.data?.message);
         dispatch(setSingleCompany(res?.data?.company));

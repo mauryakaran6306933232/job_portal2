@@ -1,4 +1,4 @@
-
+import { USER_API_END_POINT } from '../../utils/constant';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -23,23 +23,7 @@ export default function Login() {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  // const appliedJobHandler = async () => {
-  //   try {
-  //     const res = await axios.get("http://localhost:8000/application/get", {
-  //       headers: { 'Content-Type': 'application/json' },
-  //       withCredentials: true
-  //     });
-  //     if (res?.data?.success) {
-  //       dispatch(setAppliedJob(res?.data?.application));
-  //     }
-  //   } catch (error) {
-  //     console.log("Applied job fetch error:", error?.response?.data?.message || error.message);
-  //   }
-  // };
 
-  // useEffect(() => {
-  //   appliedJobHandler();
-  // }, [singleJob]);
 
   const loginHandler = async (e) => {
     e.preventDefault();
@@ -52,14 +36,9 @@ export default function Login() {
     }
 
     try {
-      const res = await axios.post("http://localhost:8000/user/login", {
-        email: input.email,
-        password: input.password,
-        role: input.role
-      }, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-      });
+      const res = await axios.post(`${USER_API_END_POINT}/login`, { // ✅ CHANGE
+        email: input.email, password: input.password, role: input.role
+      }, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
 
       if (res?.data?.success) {
         toast.success(res?.data?.message);
@@ -107,7 +86,7 @@ export default function Login() {
             </div>
             <div className='mb-6'>
               <Label className="mb-3 block">Login As</Label>
-              <RadioGroup value={input.role} className="flex items-center gap-6" onValueChange={(value) => setInput({...input, role: value})}>
+              <RadioGroup value={input.role} className="flex items-center gap-6" onValueChange={(value) => setInput({ ...input, role: value })}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="student" id="r1" />
                   <Label htmlFor="r1" className="font-normal cursor-pointer">Student</Label>
