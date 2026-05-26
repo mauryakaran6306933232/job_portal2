@@ -45,7 +45,9 @@ const SocketListener = () => {
   useEffect(() => {
     if (user?._id) {
       // ✅ USE DYNAMIC SOCKET URL
-      const socket = io(SOCKET_URL, { transports: ['websocket'] });
+      const socket = io(SOCKET_URL, { 
+    withCredentials: true  // Required for cross-origin cookies/auth
+});
       socket.emit("joinRoom", user._id);
 
       socket.on("applicationStatusUpdated", (data) => {

@@ -31,7 +31,9 @@ export default function ChatDialog({ open, setOpen, receiverId, receiverName, jo
       };
       fetchMessages();
 
-      socket.current = io(SOCKET_URL, { transports: ['websocket'] }); 
+      socket.current = io(SOCKET_URL, { 
+    withCredentials: true 
+});
       socket.current.on("receiveMessage", (data) => {
         setMessages(prev => [...prev, data]);
       });
