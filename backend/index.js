@@ -27,61 +27,49 @@ dotenv.config();
 
 const app = express();
 
-// ✅ DYNAMIC URLS: Use env vars, fallback to localhost
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+// ✅ FIX: Allow multiple origins (Localhost + Vercel Deploy URL)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://job-portal2-4oq4zm95d-altransions-projects.vercel.app",
+  process.env.FRONTEND_URL // In case you change the Vercel URL later
+].filter(Boolean);
 
 // SOCKET.IO SETUP
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: FRONTEND_URL,
+    origin: allowedOrigins, // ✅ Use array
     methods: ["GET", "POST"],
     credentials: true
   }
 });
 
-io.on("connection", (socket) => {
-  console.log("■ A user connected:", socket.id);
-  socket.on("joinRoom", (userId) => {
-    socket.join(userId);
-    console.log(`User ${userId} joined their notification room`);
-  });
-  socket.on("sendMessage", async (data) => {
-    try {
-      const newMessage = await Message.create({
-        sender: data.senderId,
-        receiver: data.receiverId,
-        content: data.content,
-        job: data.jobId
-      });
-      io.to(data.receiverId).emit("receiveMessage", {
-        _id: newMessage._id,
-        sender: data.senderId,
-        receiver: data.receiverId,
-        content: data.content,
-        createdAt: newMessage.createdAt
-      });
-    } catch (error) {
-      console.log("■ Chat socket error:", error);
-    }
-  });
-  socket.on("disconnect", () => {
-    console.log("■ A user disconnected:", socket.id);
-  });
-});
+// ... (keep your io.on connection code here) ...
 
 app.set("io", io);
 
 app.use(cookie_parser());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// ✅ DYNAMIC CORS
+// ✅ FIX: Dynamic CORS for Express
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
 mongodb_connection("job_portal");
+
+// ... (keep the rest of your index.js as is) ...
 
 app.use(express.urlencoded({ extended: true }));
 
