@@ -34,13 +34,47 @@
 // };
 
 // export default useGetAllAdminJobs;
-import axios from 'axios'; import { useEffect } from 'react'; import { useDispatch } from 'react-redux'; import { setAllCompanies } from '../redux/CompanySlice'; import { COMPANY_API_END_POINT } from '../utils/constant'; // ✅ ADD
-const useGetAllCompanies = () => {
+// import axios from 'axios'; import { useEffect } from 'react'; import { useDispatch } from 'react-redux'; import { setAllCompanies } from '../redux/CompanySlice'; import { COMPANY_API_END_POINT } from '../utils/constant'; // ✅ ADD
+// const useGetAllCompanies = () => {
+//   const dispatch = useDispatch();
+//   useEffect(() => {
+//     const fetchCompanies = async () => {
+//       try { const res = await axios.get(`${COMPANY_API_END_POINT}/get`, { withCredentials: true }); if (res?.data?.success) dispatch(setAllCompanies(res?.data?.companies)); } catch (error) { console.log(error); }
+//     }; fetchCompanies();
+//   }, [dispatch]);
+// };
+// export default useGetAllCompanies;
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAllAdminJobs } from '../redux/JobSlice';
+import { JOB_API_END_POINT } from '../utils/constant'; // ✅ MUST BE IMPORTED
+
+const useGetAllAdminJobs = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector(store => store?.user);
+
   useEffect(() => {
-    const fetchCompanies = async () => {
-      try { const res = await axios.get(`${COMPANY_API_END_POINT}/get`, { withCredentials: true }); if (res?.data?.success) dispatch(setAllCompanies(res?.data?.companies)); } catch (error) { console.log(error); }
-    }; fetchCompanies();
-  }, [dispatch]);
+    if (user?.role === 'recruiter') {
+      const fetchAllAdminJobs = async () => {
+        try {
+          // ✅ MUST USE JOB_API_END_POINT, NOT LOCALHOST
+          const res = await axios.get(`${JOB_API_END_POINT}/getAdminJob`, { withCredentials: true });
+          if (res.data.success) {
+            dispatch(setAllAdminJobs(res.data.jobs));
+          }
+        } catch (error) {
+          console.log("Fetch admin jobs error:", error);
+          if (error.response?.status === 401) {
+            dispatch(setAllAdminJobs([]));
+          }
+        }
+      };
+      fetchAllAdminJobs();
+    } else {
+      dispatch(setAllAdminJobs([]));
+    }
+  }, [user, dispatch]);
 };
-export default useGetAllCompanies;
+
+export default useGetAllAdminJobs;
